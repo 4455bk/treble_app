@@ -26,13 +26,12 @@ object Nubia : EntryStartup {
     val spListener = SharedPreferences.OnSharedPreferenceChangeListener { sp, key ->
         when (key) {
             NubiaSettings.dt2w -> {
-                val b = sp.getBoolean(key, false)
-                writeToFileNofail("/data/vendor/tp/easy_wakeup_gesture", if(b) "1" else "0")
-                writeToFileNofail("/sys/devices/platform/nubia_goodix_ts.0/gesture/enable", if(b) "1" else "0")
+                val b = sp.getBoolean(key, true)
+                writeToFileNofail("/proc/touchscreen/wake_gesture", if(b) "1" else "0")
             }
             NubiaSettings.bypassCharger -> {
                 val b = sp.getBoolean(key, false)
-                writeToFileNofail("/sys/kernel/nubia_charge/charger_bypass", if(b) "on" else "off")
+                writeToFileNofail("/sys/class/zte_power_supply/zte_battery/battery_charging_enable", if(b) "0" else "1")
             }
             NubiaSettings.highTouchScreenSampleRate -> {
                 val b = sp.getBoolean(key, false)
@@ -53,11 +52,11 @@ object Nubia : EntryStartup {
             NubiaSettings.logoBreath -> {
                 val b = sp.getBoolean(key, false)
                 if(b) {
-                    writeToFileNofail("/sys/class/leds/blue/breath_feature", "3 1000 0 700 0 255 3")
+                    writeToFileNofail("/sys/class/leds/blue/breath", "3 1000 0 700 0 255 3")
                 } else {
-                    writeToFileNofail("/sys/class/leds/blue/breath_feature", "0")
-                    writeToFileNofail("/sys/class/leds/red/breath_feature", "0")
-                    writeToFileNofail("/sys/class/leds/green/breath_feature", "0")
+                    writeToFileNofail("/sys/class/leds/blue/breath", "0")
+                    writeToFileNofail("/sys/class/leds/red/breath", "0")
+                    writeToFileNofail("/sys/class/leds/green/breath", "0")
                 }
             }
             NubiaSettings.redmagicLed -> {
